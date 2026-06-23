@@ -837,7 +837,7 @@ def main():
 
             print(to_print)
 
-        write_objects_to_file((Product(dish_name,meal,"diet calculator",100 )), "product","a",True)
+        write_objects_to_file([Product(dish_name,meal,"diet calculator",100 )], "product","a",True)
 
         return main()
 

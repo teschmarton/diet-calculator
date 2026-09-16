@@ -1,7 +1,6 @@
 import datetime
 from datetime import date
 from requests import post
-import api_key 
 from json import loads
 
 class Nutrients:
@@ -94,9 +93,26 @@ usda_db={"0":"Foundation","1":"SR Legacy","2":"Survey","3":"Branded","4":"Experi
 usda_kw={'"..."':'exact phrase e.g.: "green pepper"',r'...':'either words e.g.: green pepper','+':' makes a word required e.g.: +candy corn','-':'excludes foods having the word e.g.: candy -chocolate"','*':'matches any non-whitespace e.g.: *berry','()': 'denote grouping e.g.: pizza -(pepperoni sausage)',':':'specifies that the word must be present in a particular data element e.g.: description:cheese'}
 
 usda_nutri_numbers={"203":"protein","204":"fat","205":"carbohydrate","291":"fibre","208":"kCal","958":"kCal"}
+#API key
+while True:
+    try:
+        with open("api_key.txt","r") as f:
+            content=f.readline().strip("\n").strip("\t").strip(" ")
+        if content=="":
+            api_key=input("Valid USDA API key is missing! Please enter your valid key: ")
+            with open("api_key.txt","w") as f:
+                f.write(api_key)
+        else:
+            api_key=content
+            break
 
-url1=rf"https://api.nal.usda.gov/fdc/v1/foods/search?api_key={api_key.key()}" 
-url2=rf"https://api.nal.usda.gov/fdc/v1/foods?api_key={api_key.key()}" 
+    except FileNotFoundError:
+        with open("api_key.txt","w") as f:
+            pass
+        print("api_key.txt didnt exist! Created the missing file!")
+        
+url1=rf"https://api.nal.usda.gov/fdc/v1/foods/search?api_key={api_key}"
+url2=rf"https://api.nal.usda.gov/fdc/v1/foods?api_key={api_key}"
 
 def list_usda_items(database:list,keyword:str,requireallwords:bool):
     """
@@ -259,7 +275,7 @@ def add_object(objects:[object,...],object_type:str) -> [object,
                 print(f"{object_name} is already in the {object_type} database, or given name is invalid!")
 
         outer_object = object_classes[object_type]()
-        setattr(outer_object,outer_object.name,object_name)
+        setattr(outer_object,"name",object_name)
 
         for i in outer_object.attributes[1:]:
             while True:
@@ -608,7 +624,7 @@ def interpolation(scale_use:bool, weight:float|int)->float:
     while "real" not in scale_object_names or len(scale_objects)<2:
         print(f"Measured and/or real data missing!")
         scale_objects=add_object(scale_objects, "weight conversion")
-            
+        scale_object_names = [i.name for i in scale_objects]
 
     real_index = scale_object_names.index("real")
     real = [getattr(scale_objects[real_index], i) for i in scale_objects[real_index].attributes if i != "name"]

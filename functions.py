@@ -99,7 +99,7 @@ while True:
         with open("api_key.txt","r") as f:
             content=f.readline().strip("\n").strip("\t").strip(" ")
         if content=="":
-            api_key=input("Valid USDA API key is missing! Please enter your valid key: ")
+            api_key=input("Valid USDA API key is missing! Please enter your valid API key: ")
             with open("api_key.txt","w") as f:
                 f.write(api_key)
         else:
@@ -109,8 +109,8 @@ while True:
     except FileNotFoundError:
         with open("api_key.txt","w") as f:
             pass
-        print("api_key.txt didnt exist! Created the missing file!")
-        
+        print("api_key.txt didn't exist! Created the missing file!")
+
 url1=rf"https://api.nal.usda.gov/fdc/v1/foods/search?api_key={api_key}"
 url2=rf"https://api.nal.usda.gov/fdc/v1/foods?api_key={api_key}"
 

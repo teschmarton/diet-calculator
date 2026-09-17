@@ -97,7 +97,7 @@ usda_nutri_numbers={"203":"protein","204":"fat","205":"carbohydrate","291":"fibr
 while True:
     try:
         with open("api_key.txt","r") as f:
-            content=f.readline().strip("\n").strip("\t").strip(" ")
+            content=f.readline().strip()
         if content=="":
             api_key=input("Valid USDA API key is missing! Please enter your valid API key: ")
             with open("api_key.txt","w") as f:
